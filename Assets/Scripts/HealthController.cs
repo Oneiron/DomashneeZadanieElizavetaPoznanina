@@ -3,13 +3,20 @@ using UnityEngine;
 
 namespace Lesson
 {
-    public class HealthController : MonoBehaviour
+    public sealed class HealthController : MonoBehaviour
     {
         [SerializeField] private float _health = 3.0f;
         [SerializeField] private float _lifeTime = 5.0f;
 
-        private float _maxHp;
         private bool _isAlive = true;
+        private float _maxHp;
+        private Color[] _colors = { Color.red, Color.green, Color.blue, Color.magenta };
+        private Vector2 _randomColorChangeTime = new(0.04f, 0.9f);
+
+        public float MaxHp
+        {
+            get { return _maxHp; }
+        }
 
         private void Start()
         {
@@ -42,46 +49,48 @@ namespace Lesson
                 return false;
             }
 
-            if (_health >= _maxHp)
+            if (_health >= MaxHp)
             {
                 return false;
             }
 
-            float health = _health + _maxHp * 0.25f;
+            float health = _health + MaxHp * 0.25f;
 
-            _health = Mathf.Min(health, _maxHp);
+            _health = Mathf.Min(health, MaxHp);
 
             return true;
         }
 
         private IEnumerator Die()
         {
-            var component = GetComponent<Renderer>();
+            var renderer = GetComponent<Renderer>();
 
-            component.material.color = Color.red;
-            yield return new WaitForSeconds(1.0f);
-            component.material.color = Color.green;
-            yield return new WaitForSeconds(1.0f);
-            component.material.color = Color.red;
-            yield return new WaitForSeconds(1.0f);
-            component.material.color = Color.magenta;
+            int counter = 10;
+            do
+            {
+                renderer.material.color = _colors[Random.Range(0, _colors.Length)];
+                yield return new WaitForSeconds(Random.Range(_randomColorChangeTime.x, _randomColorChangeTime.y));
+                renderer.material.color = _colors[Random.Range(0, _colors.Length)];
+                yield return new WaitForSeconds(Random.Range(_randomColorChangeTime.x, _randomColorChangeTime.y));
+                renderer.material.color = _colors[Random.Range(0, _colors.Length)];
+                yield return new WaitForSeconds(Random.Range(_randomColorChangeTime.x, _randomColorChangeTime.y));
+                counter--;
+            }
+            while (counter >= 0);
 
             yield return new WaitForSeconds(_lifeTime);
 
-            StartCoroutine(Fade());
+            StartCoroutine(Fade(renderer));
         }
 
-        private IEnumerator Fade()
+        private IEnumerator Fade(Renderer renderer)
         {
-            if (TryGetComponent(out Renderer renderer))
+            Color color = renderer.material.color;
+            for (float alpha = 1.0f; alpha >= 0; alpha -= 0.01f)
             {
-                Color color = renderer.material.color;
-                for (float alpha = 1.0f; alpha >= 0; alpha -= 0.01f)
-                {
-                    color.a = alpha;
-                    renderer.material.color = color;
-                    yield return new WaitForSeconds(0.01f);
-                }
+                color.a = alpha;
+                renderer.material.color = color;
+                yield return new WaitForSeconds(0.1f);
             }
 
             if (TryGetComponent(out Collider collider))

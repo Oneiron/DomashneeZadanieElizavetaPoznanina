@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Lesson
 {
-    public class WeaponController : MonoBehaviour
+    public sealed class WeaponController : MonoBehaviour
     {
         [SerializeField] private Weapon _weapon;
 
@@ -13,10 +13,10 @@ namespace Lesson
                 _weapon.Fire();
             }
 
-            if (Input.GetKeyDown(KeyCode.Q))
+            if (Input.GetMouseButton(1))
             {
                 _weapon.Recharge();
             }
         }
     }
-}   
+}

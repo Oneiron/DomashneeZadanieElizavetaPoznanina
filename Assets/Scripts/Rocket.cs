@@ -5,26 +5,26 @@ namespace Lesson
     [RequireComponent(typeof(Rigidbody))]
     public sealed class Rocket : MonoBehaviour
     {
+        private const int COLLISION_SIZE = 128;
+
         [SerializeField] private float _powerExplosion;
         [SerializeField] private float _scale;
 
         private Rigidbody _rigidbody;
-        private Collider[] _collidedObjects;
+        private readonly Collider[] _collidedObjects = new Collider[COLLISION_SIZE];
+        private readonly ExplosionFactory _explosionFactory = new();
 
         private void Awake()
         {
             _rigidbody = GetComponent<Rigidbody>();
-            _collidedObjects = new Collider[128];
         }
 
         private void OnCollisionEnter(Collision other)
         {
-            var explosion = new GameObject().AddComponent<Explosion>();
-            explosion.transform.position = transform.position;
-
+            _explosionFactory.Create(transform.position);
             Destroy(gameObject);
 
-            float radius = _scale / 2;
+            float radius = _scale * 0.5f;
             Vector3 center = other.contacts[0].point;
             int countCollied = Physics.OverlapSphereNonAlloc(center, radius, _collidedObjects);
 
@@ -63,3 +63,4 @@ namespace Lesson
         }
     }
 }
+ 

@@ -1,5 +1,4 @@
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Lesson
@@ -9,6 +8,9 @@ namespace Lesson
     {
         [SerializeField] private float _damage = 1.0f;
         [SerializeField] private float _lifeTime = 7.0f;
+        [SerializeField] private BulletProjectorData[] _bulletHoles;
+
+        private BulletProjectorHelper _projectorHelper;
 
         private Rigidbody _rigidbody;
         private float _force = 3.0f;
@@ -19,11 +21,13 @@ namespace Lesson
         {
             _rigidbody = GetComponent<Rigidbody>();
             _force = Random.Range(3.0f, 47.0f);
+            _projectorHelper = new BulletProjectorHelper(_bulletHoles);
         }
 
         private void OnCollisionEnter(Collision other)
         {
-            if (TryRicochet() == false)
+            bool tryRicochet = TryRicochet();
+            if (tryRicochet == false)
             {
                 Destroy(gameObject);
             }
@@ -32,12 +36,17 @@ namespace Lesson
             {
                 if (health.CanTakeDamage(_damage))
                 {
+                    if (tryRicochet == false)
+                    {
+                        ContactPoint contact = other.contacts[0];
+                        _projectorHelper.CreateBulletHole(contact.point, contact.normal, other.transform);
+                    }
                     return;
                 }
 
                 if (other.collider.TryGetComponent(out Rigidbody rigidbody) == false)
                 {
-                    rigidbody = other.collider.AddComponent<Rigidbody>();
+                    rigidbody = other.collider.gameObject.AddComponent<Rigidbody>();
                 }
 
                 rigidbody.AddForce(_rigidbody.velocity * _force, ForceMode.Impulse);
@@ -46,7 +55,7 @@ namespace Lesson
 
         private bool TryRicochet()
         {
-            if (Random.Range(0.0f, 1.0f) > 0.2f)
+            if (Random.Range(0.0f, 1.0f) < 0.5f)
             {
                 return false;
             }

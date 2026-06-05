@@ -1,4 +1,3 @@
-using System.Net.Sockets;
 using UnityEngine;
 
 namespace Lesson
@@ -18,7 +17,7 @@ namespace Lesson
         {
             if (_instantiateRocket)
             {
-                _instantiateRocket.Run(_barrel.forward * _force);
+                _instantiateRocket.Run(_barrel.forward * Force);
                 _instantiateRocket = null;
             }
         }

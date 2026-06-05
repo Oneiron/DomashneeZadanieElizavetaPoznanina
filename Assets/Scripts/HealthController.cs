@@ -10,12 +10,14 @@ namespace Lesson
 
         private bool _isAlive = true;
         private float _maxHp;
-        private Color[] _colors = { Color.red, Color.green, Color.blue, Color.magenta };
-        private Vector2 _randomColorChangeTime = new(0.04f, 0.9f);
+        private Color[] _colors = new Color[3] { Color.red, Color.green, Color.blue };
 
         public float MaxHp
         {
-            get { return _maxHp; }
+            get
+            {
+                return _maxHp;
+            }
         }
 
         private void Start()
@@ -42,63 +44,62 @@ namespace Lesson
             return true;
         }
 
-        public bool CanAddHealth()
+        public bool CanAddHealth(int health)
         {
             if (_isAlive == false)
             {
                 return false;
             }
 
-            if (_health >= MaxHp)
+            if (_health >= _maxHp)
             {
                 return false;
             }
 
-            float health = _health + MaxHp * 0.25f;
-
-            _health = Mathf.Min(health, MaxHp);
-
+            _health += health;
             return true;
         }
 
         private IEnumerator Die()
         {
-            var renderer = GetComponent<Renderer>();
+            var component = GetComponent<Renderer>();
 
             int counter = 10;
             do
             {
-                renderer.material.color = _colors[Random.Range(0, _colors.Length)];
-                yield return new WaitForSeconds(Random.Range(_randomColorChangeTime.x, _randomColorChangeTime.y));
-                renderer.material.color = _colors[Random.Range(0, _colors.Length)];
-                yield return new WaitForSeconds(Random.Range(_randomColorChangeTime.x, _randomColorChangeTime.y));
-                renderer.material.color = _colors[Random.Range(0, _colors.Length)];
-                yield return new WaitForSeconds(Random.Range(_randomColorChangeTime.x, _randomColorChangeTime.y));
+                component.material.color = _colors[Random.Range(0, _colors.Length)];
+                yield return new WaitForSeconds(Random.Range(0.1f, 0.5f));
+                component.material.color = _colors[Random.Range(0, _colors.Length)];
+                yield return new WaitForSeconds(Random.Range(0.1f, 0.5f));
+                component.material.color = _colors[Random.Range(0, _colors.Length)];
+                yield return new WaitForSeconds(Random.Range(0.1f, 0.5f));
                 counter--;
             }
             while (counter >= 0);
 
             yield return new WaitForSeconds(_lifeTime);
 
-            StartCoroutine(Fade(renderer));
+            StartCoroutine(Fade());
         }
 
-        private IEnumerator Fade(Renderer renderer)
+        private IEnumerator Fade()
         {
-            Color color = renderer.material.color;
-            for (float alpha = 1.0f; alpha >= 0; alpha -= 0.01f)
-            {
-                color.a = alpha;
-                renderer.material.color = color;
-                yield return new WaitForSeconds(0.1f);
-            }
+            // if (TryGetComponent(out Renderer renderer))
+            // {
+            //     Color color = renderer.material.color;
+            //     for (float alpha = 1.0f; alpha >= 0; alpha -= 0.1f)
+            //     {
+            //         color.a = alpha;
+            //         renderer.material.color = color;
+            //         yield return new WaitForSeconds(0.1f);
+            //     }
+            // }
 
             if (TryGetComponent(out Collider collider))
             {
-                Destroy(collider);
+                collider.enabled = false;
+                yield return new WaitForSeconds(5.1f);
             }
-
-            yield return new WaitForSeconds(5.0f);
 
             Destroy(gameObject);
         }

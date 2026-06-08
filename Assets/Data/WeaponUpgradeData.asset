@@ -12,5 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0965f2b68f08d0439d51281dcd05e62, type: 3}
   m_Name: WeaponUpgradeData
   m_EditorClassIdentifier: 
-  _weaponDataByLevels: []
-  _weaponDataDefault: {fileID: 0}
+  _weaponDataByLevels:
+  - Level: 0
+    Data: {fileID: 11400000, guid: 44aac48f76eac7843a6af4f3efaa2737, type: 2}
+  - Level: 0
+    Data: {fileID: 11400000, guid: 1728799391b91df4ab3714805ca9695c, type: 2}
+  - Level: 0
+    Data: {fileID: 11400000, guid: ae19e5111b31aef4283380fb68940b95, type: 2}
+  - Level: 0
+    Data: {fileID: 11400000, guid: f2659f5bc7eab984593322625399a208, type: 2}
+  _weaponDataDefault: {fileID: 11400000, guid: 44aac48f76eac7843a6af4f3efaa2737, type: 2}

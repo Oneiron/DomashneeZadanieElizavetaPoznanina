@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 658cebda7d656eb4aa1335ad899611d5, type: 3}
   m_Name: WeaponData 1
   m_EditorClassIdentifier: 
-  _force: 0
-  _shotDelay: 0
+  _force: 80
+  _shotDelay: 0.4

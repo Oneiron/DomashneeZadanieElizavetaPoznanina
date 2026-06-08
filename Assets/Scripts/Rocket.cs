@@ -22,9 +22,10 @@ namespace Lesson
         private void OnCollisionEnter(Collision other)
         {
             _explosionFactory.Create(transform.position);
+
             Destroy(gameObject);
 
-            float radius = _scale * 0.5f;
+            float radius = _scale * 0.5f; // _scale / 2;
             Vector3 center = other.contacts[0].point;
             int countCollied = Physics.OverlapSphereNonAlloc(center, radius, _collidedObjects);
 
@@ -43,6 +44,10 @@ namespace Lesson
                         rigidbody = healthController.gameObject.AddComponent<Rigidbody>();
                     }
                     rigidbody.AddExplosionForce(_powerExplosion, center, radius);
+
+                    healthController.gameObject
+                        .GetOrAddRigidbody()
+                        .AddExplosionForce(_powerExplosion, center, radius);
                 }
             }
         }

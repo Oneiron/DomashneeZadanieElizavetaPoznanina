@@ -1,12 +1,13 @@
+using System;
 using UnityEngine;
 
 namespace Lesson
 {
     public abstract class Weapon : MonoBehaviour
     {
-        [SerializeField] protected int _level = 1;
+        [SerializeField] private int _level;
         [SerializeField] protected Transform _barrel;
-        [SerializeField] protected WeaponUpgradeData _weaponUpgradeData;
+        [SerializeField] protected WeaponUpgradeData _upgradeData;
 
         protected float LastShootTime { get; set; }
         protected bool CanShoot { get; private set; }
@@ -16,17 +17,13 @@ namespace Lesson
 
         protected virtual void Start()
         {
-            if (_weaponUpgradeData.TryGetDataByLevel(_level, out WeaponData data))
+            if (_upgradeData.TryGetDataByLevel(_level, out WeaponData data) == false)
             {
-                _shotDelay = data.ShotDelay;
-                Force = data.Force;
+                data = _upgradeData.GetDefaultData();
             }
-            else
-            {
-                WeaponData defaultData = _weaponUpgradeData.GetDefaultData();
-                _shotDelay = defaultData.ShotDelay;
-                Force = defaultData.Force;
-            }
+
+            _shotDelay = data.ShotDelay;
+            Force = data.Force;
         }
 
         private void Update()
@@ -48,6 +45,11 @@ namespace Lesson
         public virtual void GetInfo()
         {
             Debug.LogError(_shotDelay);
+        }
+
+        public void SetActive(bool isActive)
+        {
+            gameObject.SetActive(isActive);
         }
     }
 }

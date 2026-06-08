@@ -44,18 +44,15 @@ namespace Lesson
                     return;
                 }
 
-                if (other.collider.TryGetComponent(out Rigidbody rigidbody) == false)
-                {
-                    rigidbody = other.collider.gameObject.AddComponent<Rigidbody>();
-                }
-
-                rigidbody.AddForce(_rigidbody.velocity * _force, ForceMode.Impulse);
+                RigidbodyHelper
+                    .AddOrGetRigidbody(other.collider.gameObject)
+                    .AddForce(_rigidbody.velocity * _force, ForceMode.Impulse);
             }
         }
 
         private bool TryRicochet()
         {
-            if (Random.Range(0.0f, 1.0f) < 0.5f)
+            if (Random.Range(0.0f, 1.0f) > 0.2f)
             {
                 return false;
             }

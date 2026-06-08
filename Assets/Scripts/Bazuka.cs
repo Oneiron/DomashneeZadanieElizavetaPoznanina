@@ -8,8 +8,9 @@ namespace Lesson
 
         private Rocket _instantiateRocket;
 
-        private void Start()
+        protected override void Start()
         {
+            base.Start();
             Recharge();
         }
 
@@ -33,3 +34,4 @@ namespace Lesson
         }
     }
 }
+

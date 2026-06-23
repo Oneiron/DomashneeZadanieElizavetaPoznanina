@@ -1,5 +1,10 @@
 using UnityEngine;
 
+namespace gamecodebase
+{
+
+}
+
 [CreateAssetMenu(fileName = "BrickConfig", menuName = "Game/Brick Config")]
 public class BrickConfig : ScriptableObject
 {
@@ -7,7 +12,7 @@ public class BrickConfig : ScriptableObject
 
     public Color GetColor(int rowIndex)
     {
-        // Если рядов больше, чем цветов — повторяем цвета
+     
         int index = rowIndex % _rowColors.Length;
         return _rowColors[index];
     }

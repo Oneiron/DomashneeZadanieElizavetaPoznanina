@@ -1,5 +1,9 @@
 using UnityEngine;
 
+namespace gamecodebase
+{
+
+}
 public class PlatformController : MonoBehaviour
 {
     [SerializeField] private float _speed = 10f;           

@@ -1,5 +1,8 @@
 using UnityEngine;
+namespace gamecodebase
+{
 
+}
 public class BrickSpawner : MonoBehaviour
 {
     [Header("Prefabs")]
@@ -22,22 +25,19 @@ public class BrickSpawner : MonoBehaviour
 
     private void SpawnBricks()
     {
-        for (int row = 0; row < _rows; row++)       
+        for (int row = 0; row < _rows; row++)
         {
-          
             Color rowColor = _config.GetColor(row);
 
-            for (int col = 0; col < _columns; col++)   
+            for (int col = 0; col < _columns; col++)
             {
-             
                 float x = _startPosition.x + col * _spacingX;
                 float y = _startPosition.y - row * _spacingY;
-                Vector3 position = new Vector3(x, y, 0);
+                float z = _startPosition.z;
 
-           
+                Vector3 position = new Vector3(x, y, z);  
+
                 Brick newBrick = Instantiate(_brickPrefab, position, Quaternion.identity);
-
-              
                 newBrick.SetColor(rowColor);
             }
         }
